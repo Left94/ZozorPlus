@@ -44,26 +44,48 @@ class CalculatorTest: XCTestCase {
     }
     func testGivenIsCorrectForm_WhenExpressionIsWrong_ThenIsExpressionCorrectReturnFalse() {
         calculator.addNewNumber(8)
-        setOperators(operators)//test each operator's case
+        calculator.minusOperator()
         calculator.calculateTotal()
         
         XCTAssertFalse(calculator.isExpressionCorrect)
     }
     
+    func testGivenIsCorrectForm_WhenExpressionIsMissingNumber_ThenIsExpressionCorrectReturnFalse() {
+        
+        calculator.minusOperator()
+        calculator.calculateTotal()
+        
+        XCTAssertFalse(calculator.isExpressionCorrect)
+    }
     
     func testGivenAddOperator_WhenFormIsComplete_ThenExpressionCorrectReturnTrue() {
         calculator.addNewNumber(8)
         XCTAssertTrue(calculator.canAddOperator)
     }
     func testGivenCantAddOperator_WhenFormIsIncomplete_ThenExpressionCorrectReturnFalse() {
+        XCTAssertFalse(calculator.canAddOperator)
     }
     
-    
-    
-    
-    
-    
-    func testGiven_When_Then() {
+    func testGivenAddNewNumber_WhenStringNumberIsEmpty_ThenNewNumberIsAddedToStringNumber() {
+        calculator.addNewNumber(8)
+        
+        XCTAssert(calculator.stringNumbers[calculator.stringNumbers.count-1] == "8")
         
     }
+    
+    func testGivenOperations_WhenStringNumberIsAddedAndOperatorsUsed_ThenCalculatorDoOperations() {
+        calculator.addNewNumber(8)
+        calculator.minusOperator()
+        calculator.addNewNumber(8)
+        calculator.plusOperator()
+        calculator.addNewNumber(8)
+        calculator.divideOperator()
+        calculator.addNewNumber(8)
+        calculator.calculateTotal()
+        
+        
+    }
+    
+    
+    
 }

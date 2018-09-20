@@ -19,7 +19,7 @@ class ViewController: UIViewController {
     @IBOutlet var numberButtons: [UIButton]!
     
     // MARK: - Action
-
+    //When touching numberButton using sender equal to numberButton to update display and add this number to the view
     @IBAction func tappedNumberButton(_ sender: UIButton) {
         for (i, numberButton) in numberButtons.enumerated() {
             if sender == numberButton {
@@ -27,15 +27,20 @@ class ViewController: UIViewController {
             }
         }
     }
-    
+    //actions do with each button using their title tag
     @IBAction func operatorButtonsTapped(_ sender: UIButton) {
         switch sender.title(for: .normal) {
         case "+"?:
             calculator.plusOperator()
         case "-"?:
             calculator.minusOperator()
+        case "÷"?:
+            calculator.divideOperator()//bonus
         case "="?:
             calculator.calculateTotal()
+        case "C"?:
+            changeTextView(newText: "0")
+            calculator.clear()
         default:
             break
         }
@@ -46,7 +51,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         //initializing and setting up the views
         super.viewDidLoad()
-        calculator.showAlert = self
+        calculator.diplayAlert = self
         calculator.changeText = self
     }
 }
@@ -59,22 +64,14 @@ class ViewController: UIViewController {
             present(alertVC, animated: true, completion: nil)
         }
     }
-
+    // Extension with delegate Protocol to manage alert pop up in the model
     extension ViewController: ShowAlertDelegate {
-        //custom Alert pop up: each alert has it own message
-        func showIncorrectForm() {
-            showBasicAlert(title: "Zéro!", message: "Expression incorrecte !")
-        }
-    
-        func showIncompleteForm() {
-            showBasicAlert(title: "Zéro!", message: "Entrez une expression corecte")
-        }
-    
-        func showStartNewCalcul() {
-            showBasicAlert(title: "Zéro!", message: "Démarrez un nouveau calcul !")
-        }
+            func showAlert(title: String, message: String) {
+                showBasicAlert(title: title, message: message)
+            }
     }
 
+    // Extension with delegate Protocol to manage text view display in the model
     extension ViewController: ChangeTextDelegate {
         func changeTextView(newText: String) {
             textView.text = newText
