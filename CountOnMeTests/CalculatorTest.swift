@@ -79,13 +79,47 @@ class CalculatorTest: XCTestCase {
         calculator.addNewNumber(8)
         calculator.plusOperator()
         calculator.addNewNumber(8)
-        calculator.divideOperator()
+        calculator.calculateTotal()
+        
+        
+    }
+    
+    func testGivenClear_WhenStringNumberContainAnything_ThenStringNumberIsCleared() {
+        calculator.clear()
+        
+        XCTAssert(calculator.stringNumbers[calculator.stringNumbers.count-1] == "")
+        XCTAssert(calculator.operators == ["+"])
+        XCTAssert(calculator.index == 0)
+    }
+    
+    func testGivenOperations_WhenStringNumberIsAddedAndMultiplyOperatorUsed_ThenCalculatorDoOperations() {//Bonus test
+        calculator.addNewNumber(8)
+        calculator.multiplyOperator()
         calculator.addNewNumber(8)
         calculator.calculateTotal()
         
         
     }
     
+    func testGivenOperations_WhenStringNumberIsAddedAndDivideOperatorUsed_ThenCalculatorDoOperations() {//Bonus test
+        calculator.addNewNumber(8)
+        calculator.divideOperator()
+        calculator.addNewNumber(8)
+        calculator.calculateTotal()
+        
+        XCTAssert(true)
+        
+    }
     
+    func testGivenOrderOfOperations_WhenStringNumberContainSomething_ThenStringNumberIsCorrect() {//Bonus test
+        calculator.mathOrder()
+        
+        XCTAssert(true)
+    }
     
+    func testGivenMysteryButton_WhenMysteryButtonIsTapped_ThenTextViewContainString() {//Bonus test
+        calculator.mysteryButton()
+        
+        XCTAssert(calculator.stringNumbers[calculator.stringNumbers.count-1] .isEmpty)
+    }
 }

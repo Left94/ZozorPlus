@@ -17,6 +17,7 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var textView: UITextView!
     @IBOutlet var numberButtons: [UIButton]!
+    @IBOutlet weak var dotButton: UIButton!
     
     // MARK: - Action
     //When touching numberButton using sender equal to numberButton to update display and add this number to the view
@@ -28,6 +29,7 @@ class ViewController: UIViewController {
         }
     }
     //actions do with each button using their title tag
+    //used to perform calcul
     @IBAction func operatorButtonsTapped(_ sender: UIButton) {
         switch sender.title(for: .normal) {
         case "+"?:
@@ -36,14 +38,22 @@ class ViewController: UIViewController {
             calculator.minusOperator()
         case "÷"?:
             calculator.divideOperator()//bonus
+        case "x"?:
+            calculator.multiplyOperator()//bonus
         case "="?:
             calculator.calculateTotal()
-        case "C"?:
-            changeTextView(newText: "0")
-            calculator.clear()
         default:
             break
         }
+    }
+    //used to clear text view
+    @IBAction func clearButtonTapped(_ sender: UIButton) {//bonus
+        changeTextView(newText: "0")
+        calculator.clear()
+    }
+    
+    @IBAction func mysteryButton(_ sender: Any) {
+        calculator.mysteryButton()
     }
     
     // MARK: - Methods
@@ -57,27 +67,26 @@ class ViewController: UIViewController {
 }
     // MARK: - Extensions
 
-    extension ViewController {
-        private func showBasicAlert(title: String, message: String) {
-            let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
-            alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-            present(alertVC, animated: true, completion: nil)
+extension ViewController {
+    private func showBasicAlert(title: String, message: String) {
+        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+        present(alertVC, animated: true, completion: nil)
+    }
+}
+// Extension with delegate Protocol to manage alert pop up in the model
+extension ViewController: ShowAlertDelegate {
+        func showAlert(title: String, message: String) {
+            showBasicAlert(title: title, message: message)
         }
-    }
-    // Extension with delegate Protocol to manage alert pop up in the model
-    extension ViewController: ShowAlertDelegate {
-            func showAlert(title: String, message: String) {
-                showBasicAlert(title: title, message: message)
-            }
-    }
+}
 
-    // Extension with delegate Protocol to manage text view display in the model
-    extension ViewController: ChangeTextDelegate {
-        func changeTextView(newText: String) {
-            textView.text = newText
-        }
+// Extension with delegate Protocol to manage text view display in the model
+extension ViewController: ChangeTextDelegate {
+    func changeTextView(newText: String) {
+        textView.text = newText
     }
-
+}
 
 
 

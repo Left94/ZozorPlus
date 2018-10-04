@@ -21,10 +21,13 @@ class Calculator {
     
     var diplayAlert: ShowAlertDelegate?
     var changeText: ChangeTextDelegate?
-    
     var stringNumbers: [String] = [String()]
     var operators: [String] = ["+"]
     var index = 0
+    
+    
+    
+    
     //Calculate property to check if the user entered a correct expression. If not popu up alert appears to warn the user
     var isExpressionCorrect: Bool {
         if let stringNumber = stringNumbers.last {
@@ -77,6 +80,14 @@ class Calculator {
         }
         updateDisplay()
     }
+    //Manage multiply Operator bonus
+    func multiplyOperator() {
+        if canAddOperator {
+            operators.append("x")
+            stringNumbers.append("")
+        }
+        updateDisplay()
+    }
     
     func addNewNumber(_ newNumber: Int) {
         if let stringNumber = stringNumbers.last {
@@ -87,29 +98,71 @@ class Calculator {
         updateDisplay()
     }
     
+    func mysteryButton() {//Bonus
+        let emoticons = ["Bonne chance!","Bravo!","Comment puis-je vous aider?","Comment allez-vous?","Belle journée n'est-ce pas?","Vive les mathématiques!","Un coup de main?","Vous avez l'air perdu..", "Courage!", "Vous y êtes presque!","Vous devriez faire une pause!"]
+        let randomIndex = Int(arc4random_uniform(UInt32(emoticons.count)))
+        changeText?.changeTextView(newText: emoticons[randomIndex])
+    }
+    
     func calculateTotal() {
         if !isExpressionCorrect {
             return
         }
         
+        mathOrder() // we check if we have to perform first priority calculation
         var total: Double = 0
+       
         for (i, stringNumber) in stringNumbers.enumerated() {
             if let number = Double(stringNumber) {
                 if operators[i] == "+" {
                     total += number
                 } else if operators[i] == "-" {
                     total -= number
-                }else if operators[i] == "÷" && number != 0 {//bonus
-                    total /= number
-                }else{
-                   diplayAlert?.showAlert(title: "Erreur", message: "Diviser par zéro est impossible")
                 }
             }
         }
         let result = String(total)
         changeText?.changeTextView(newText: result)
+    }
+    //Manage priority calculate bonus
+    func mathOrder() {
         
-        clear()
+        let firstOperators:[String] = ["x" , "÷"]              // always have priority to perform calculate before "+" and "-" operators
+        var result:Double = 0                                  //.....while we have a second number to perform calcul
+        var index = 0
+        
+        while index < stringNumbers.count - 1 {                                               // we want to repeat the priority orders multiply and divide to calculate..
+            if var firstNumber = Double(stringNumbers[index]) {// we check if we have a first number to perform calculate at index "0"
+                                                               // stringNumber[(1), 2, 3…] index = 0
+                
+                while firstOperators.contains(operators[index + 1]) {        //while we have a priority operator after first number
+                    if let secondNumber = Double(stringNumbers[index + 1]) { //we check if we have a second number to perform calculate
+                                                                             // stringNumber[1, (2), 3…] index = 1
+                        if operators[index + 1] == "x" {
+                            result = firstNumber * secondNumber              // 1x2
+                        } else if
+                            operators[index + 1] == "÷" && secondNumber != 0 {
+                            result = firstNumber / secondNumber              // 1÷2
+                        } else {
+                            diplayAlert?.showAlert(title: "", message: "")   // if user try to divide by "0" we pop up error message alert
+                        }
+                        
+                        stringNumbers.remove(at: index + 1)   // when priority math is over then we remove the second numbers and
+                        operators.remove(at: index + 1)       // priority operator we used from arrays ([numbers]&[operators])...
+                                                              // ...to perform the next calcul
+                        firstNumber = result                  // the first number become the result and...
+                        stringNumbers[index] = String(result) // ...result is convert to string
+                        
+                        
+                        
+                        if index == stringNumbers.count - 1 { // if we don't have any other numbers to perform priority we stop
+                            return                             // to perform the priority calculate
+                        }
+                    }
+                }
+                index = index + 1                             // we increment +1 to index to perform next calculate with "result"
+            }
+        }
     }
     
     func updateDisplay() {
@@ -125,11 +178,9 @@ class Calculator {
         changeText?.changeTextView(newText: text)
     }
     
-   
-    ///////////////////////////////??
     func clear() {
         stringNumbers = [String()]
         operators = ["+"]
         index = 0
-    }//////////////////////////////??
+    }
 }
