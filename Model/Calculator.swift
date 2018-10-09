@@ -99,9 +99,9 @@ class Calculator {
     }
     
     func mysteryButton() {//Bonus
-        let emoticons = ["Bonne chance!","Bravo!","Comment puis-je vous aider?","Comment allez-vous?","Belle journée n'est-ce pas?","Vive les mathématiques!","Un coup de main?","Vous avez l'air perdu..", "Courage!", "Vous y êtes presque!","Vous devriez faire une pause!"]
-        let randomIndex = Int(arc4random_uniform(UInt32(emoticons.count)))
-        changeText?.changeTextView(newText: emoticons[randomIndex])
+        let quote = ["Bonne chance!","Bravo!","Comment puis-je vous aider?","Comment allez-vous?","Belle journée n'est-ce pas?","Vive les mathématiques!","Un coup de main?","Vous avez l'air perdu..", "Courage!", "Vous y êtes presque!","Vous devriez faire une pause!"]
+        let randomIndex = Int(arc4random_uniform(UInt32(quote.count)))
+        changeText?.changeTextView(newText: quote[randomIndex])
     }
     
     func calculateTotal() {
@@ -123,17 +123,20 @@ class Calculator {
         }
         let result = String(total)
         changeText?.changeTextView(newText: result)
+        clear()
+        
     }
     //Manage priority calculate bonus
     func mathOrder() {
         
         let firstOperators:[String] = ["x" , "÷"]              // always have priority to perform calculate before "+" and "-" operators
-        var result:Double = 0                                  //.....while we have a second number to perform calcul
+        var result:Double = 0
         var index = 0
         
-        while index < stringNumbers.count - 1 {                                               // we want to repeat the priority orders multiply and divide to calculate..
-            if var firstNumber = Double(stringNumbers[index]) {// we check if we have a first number to perform calculate at index "0"
-                                                               // stringNumber[(1), 2, 3…] index = 0
+        while index < stringNumbers.count - 1 {                             // while we have a second number to perform calcul
+                                                                            // we want to repeat the priority orders multiply and divide to calculate..
+            if var firstNumber = Double(stringNumbers[index]) {             // we check if we have a first number to perform calculate at index "0"
+                                                                            // stringNumber[(1), 2, 3…] index = 0
                 
                 while firstOperators.contains(operators[index + 1]) {        //while we have a priority operator after first number
                     if let secondNumber = Double(stringNumbers[index + 1]) { //we check if we have a second number to perform calculate
@@ -144,7 +147,7 @@ class Calculator {
                             operators[index + 1] == "÷" && secondNumber != 0 {
                             result = firstNumber / secondNumber              // 1÷2
                         } else {
-                            diplayAlert?.showAlert(title: "", message: "")   // if user try to divide by "0" we pop up error message alert
+                            diplayAlert?.showAlert(title: "Erreur", message: "Vous ne pouvez pas diviser par 0 !")   // if user try to divide by "0" we pop up error message alert
                         }
                         
                         stringNumbers.remove(at: index + 1)   // when priority math is over then we remove the second numbers and
